@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 環境構築
 
-## Getting Started
+## 事前準備
 
-First, run the development server:
+- Supabaseの`car_custom_simulation`プロジェクトに参加しておく
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 手順
+
+- supabaseのプロジェクトをローカルに紐付ける
+
+```
+supabase link --project-ref NEXT_PUBLIC_SUPABASE_URL
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- db更新(検証のsupabaseの内容をローカルに取り込み)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+supabase db pull
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- .env.localの作成
 
-## Learn More
+```
+cp .env.example .env.local
+```
 
-To learn more about Next.js, take a look at the following resources:
+- supabaseをローカルで起動
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+supabase start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- .env.localの以下の値を、向き先に応じて書き換える
+  - ローカル
+    - `supabase start`の実行結果に表示されている`API URL`と`anon key`を参照する
+  - 検証
+    - Supabaseのプロジェクトの`Project Settings > API`ページの内容で置き換える
 
-## Deploy on Vercel
+```
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Next起動
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+npm run dev
+```
+
+<!-- - テストユーザーでログインできることを確認
+
+# テストユーザー
+
+```
+管理者
+admin@test.com
+password
+``` -->
+
+# Supabaseコマンド
+
+## DB定義をもとにTypeScriptの型を生成
+
+```
+supabase gen types typescript --project-id
+NEXT_PUBLIC_SUPABASE_URL > supabase/database.types.ts
+```
+
+## DB定義をもとにマイグレーションファイルを生成
+
+```
+supabase db pull
+```
